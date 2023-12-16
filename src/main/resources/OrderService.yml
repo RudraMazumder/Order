@@ -1,0 +1,248 @@
+openapi: 3.0.0
+info:
+  title: Fyr Order API
+  description: Flyr Order API
+  version: 1.0.0
+servers:
+  - url: http://devapi.com
+  - url: http://prodapi.com
+tags:
+  - name: order
+    description: Access to order resource
+    externalDocs:
+      description: Find out more about our store
+      url: http://swagger.io
+  - name: product
+    description: Access to product resource
+    externalDocs:
+      description: Find out more about our store
+      url: http://swagger.io
+
+
+paths:
+  /products:
+    description: Product resources
+    get:
+      tags:
+        - product
+      description: Get All Products
+      summary: Get all Products
+      responses:
+        200:
+          description: Success Response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/product'
+    post:
+      description: Add new product
+      summary: Add a new product
+      tags:
+        - product
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/product'
+      responses:
+        201:
+          description: Record Successfully Added
+  /products/{id}:
+    description: get product by code
+    summary: get product by code
+    get:
+      tags:
+        - product
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            example: 1
+      responses:
+        200:
+          description: Success Response for each identifier
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/product'
+    delete:
+      summary: delete product by code
+      tags:
+        - product
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            example: 1
+      responses:
+        200:
+          description: deleted product
+
+  /orders:
+    description: Orders resources
+    get:
+      tags:
+        - order
+      description: Get All Orders
+      summary: get all orders
+      responses:
+        200:
+          description: Success Response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/order'
+    post:
+      description: Add new Order
+      summary: add new order
+      tags:
+        - order
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/order'
+      responses:
+        201:
+          description: Record Successfully Added
+  /orders/{id}:
+    description: get order by code
+    get:
+      summary: get order by code
+      tags:
+        - order
+      parameters:
+        - in : path
+          name: id
+          required: true
+          schema:
+            type: integer
+            example: 1
+      responses:
+        200:
+          description: Success Response for each identifier
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/order'
+    delete:
+      summary: delete order by code
+      tags:
+        - order
+      parameters:
+        - name : id
+          in: path
+          required: true
+          schema:
+            type: integer
+            example: 1
+      responses:
+        200:
+          description: deleted order
+
+  /orders/{id}/products:
+    description: get all products for a given order
+    get:
+      summary: get all products for a given order
+      tags:
+        - order
+      parameters:
+        - in : path
+          name: id
+          required: true
+          schema:
+            type: integer
+            example: 1
+      responses:
+        200:
+          description: Success Response for each identifier
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/product'
+    post:
+      tags:
+        - order
+      summary: Add product for a given order
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            example: 1
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/product'
+      responses:
+        201:
+          description: Item Successfully Added
+    delete:
+      summary: delete all items for a given order
+      tags:
+        - order
+      parameters:
+        - name : id
+          in: path
+          required: true
+          schema:
+            type: integer
+            example: 1
+      responses:
+        200:
+          description: deleted order
+
+
+components:
+  schemas:
+    order:
+      type: object
+      properties:
+        OrderId:
+          type: integer
+          example: 3
+        CustomerName:
+          type: string
+          example: David
+        Products:
+          type: array
+          items:
+            $ref: "#/components/schemas/product"
+
+    product:
+      type: object
+      properties:
+        productId:
+          type: integer
+          example: asds24324
+        productName:
+          type: string
+          example: iPhone 14
+        price:
+          type: integer
+          example: 1000
+        category:
+          type: string
+          enum:
+            - PHONE
+            - TV
+            - REFRIGERATOR
+            - OTHERS
+        currency:
+          type: string
+          enum:
+            - USD
+            - EUR
+            - INR
